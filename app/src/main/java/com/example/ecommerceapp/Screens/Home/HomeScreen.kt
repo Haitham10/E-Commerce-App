@@ -1,6 +1,5 @@
 package com.example.ecommerceapp.Screens.Home
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,19 +11,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.ecommerceapp.model.Category
-import com.example.ecommerceapp.model.Product
+import com.example.ecommerceapp.Screens.navigation.Screens
+import com.example.ecommerceapp.viewmodels.CategoryViewModel
+import com.example.ecommerceapp.viewmodels.ProductViewModel
 
 @Composable
-fun HomeScreen(navController : NavController){
+fun HomeScreen(navController : NavController ,
+               productViewModel: ProductViewModel = hiltViewModel(),
+               categoryViewModel: CategoryViewModel = hiltViewModel(),
+
+){
     Scaffold (topBar = { MyTopAppBar() },
         bottomBar = { BottomNavigationBar() })
     {
@@ -41,12 +46,8 @@ fun HomeScreen(navController : NavController){
                 onSearch = {},
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
                 )
-            val categories : List<Category> = listOf(
-                Category(
-                    id = 1 , name = "Electronics" , iconUrl = "https://cdn-icons-png.flaticon.com/512/1555/1555401.png"),
-                Category(
-                    id = 2 , name = "Clothing" , iconUrl = "https://cdn-icons-png.flaticon.com/512/2230/2230695.png")
-            )
+            val categoriesState = categoryViewModel.categories.collectAsState()
+            val categories = categoriesState.value
 
             val selectedCategory = remember { mutableStateOf(0) }
 
@@ -76,24 +77,21 @@ fun HomeScreen(navController : NavController){
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val productList = listOf(Product(id = "1",
-                name = "smart phone",
-                price = 100.0,
-                imageUrl = "https://www.shutterstock.com/image-illustration/mobile-phone-mockups-sample-home-600nw-2203389119.jpg"
-                ),
-                Product(id = "2",
-                    name = "Laptop",
-                    price = 300.0,
-                    imageUrl = "https://asani.co.id/wp-content/uploads/2023/08/ezgif.com-resize-8-1.jpg")
-            )
+            productViewModel.getAllProductsInFirestore()
+
+            val productListState = productViewModel.allProducts.collectAsState()
+            val allProductFound = productListState.value
 
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
 
             ) {
-                items(productList){
+                items(allProductFound){
                     product -> FeaturedProductCard(product = product) {
+                        navController.navigate(
+                            Screens.ProductDetails.createRoute(product.id)
+                        )
 
                 }
                 }

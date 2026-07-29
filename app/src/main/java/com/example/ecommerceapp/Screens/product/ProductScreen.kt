@@ -9,14 +9,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.model.Product
+import com.example.ecommerceapp.viewmodels.ProductViewModel
 
 @Composable
 fun ProductScreen(categoryId : String ,
-                  navController : NavController){
+                  navController : NavController ,
+                  productViewModel: ProductViewModel = hiltViewModel()){
+
+    LaunchedEffect(categoryId){
+        productViewModel.fetchProducts(categoryId)
+    }
+
     val products = listOf(Product(id = "1",
         name = "smart phone",
         price = 100.0,

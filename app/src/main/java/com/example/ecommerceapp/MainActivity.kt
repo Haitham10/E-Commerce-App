@@ -25,8 +25,9 @@ import com.example.ecommerceapp.Screens.profile.LoginScreen
 import com.example.ecommerceapp.Screens.profile.ProfileScreen
 import com.example.ecommerceapp.Screens.profile.SignUpScreen
 import com.example.ecommerceapp.ui.theme.ECommerceAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
