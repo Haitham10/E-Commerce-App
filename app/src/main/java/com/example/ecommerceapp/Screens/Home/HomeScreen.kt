@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import com.example.ecommerceapp.Screens.navigation.Screens
 import com.example.ecommerceapp.viewmodels.CategoryViewModel
 import com.example.ecommerceapp.viewmodels.ProductViewModel
+import org.tensorflow.lite.support.label.Category
 
 @Composable
 fun HomeScreen(navController : NavController ,
@@ -52,7 +53,7 @@ fun HomeScreen(navController : NavController ,
             val selectedCategory = remember { mutableStateOf(0) }
 
             SectionTitle("Categories" ,"See all") {
-                navController.navigate("Categories")
+                navController.navigate(Screens.CategoryList.route)
             }
             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp))
@@ -63,7 +64,10 @@ fun HomeScreen(navController : NavController ,
                         text = categories[category].name,
                         isSelected = selectedCategory.value == category,
                         onClick = {
-                            selectedCategory.value = category
+                            selectedCategory.value = categories[category].id
+                            navController.navigate(
+                                Screens.ProductList.createRoute
+                                    (selectedCategory.value.toString()))
                         }
                     )
 
@@ -72,7 +76,9 @@ fun HomeScreen(navController : NavController ,
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            SectionTitle("Featured" ,"See all") { }
+            SectionTitle("Featured" ,"See all") {
+                navController.navigate(Screens.CategoryList.route)
+            }
 
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -26,16 +27,13 @@ fun ProductScreen(categoryId : String ,
         productViewModel.fetchProducts(categoryId)
     }
 
-    val products = listOf(Product(id = "1",
-        name = "smart phone",
-        price = 100.0,
-        imageUrl = "https://www.shutterstock.com/image-illustration/mobile-phone-mockups-sample-home-600nw-2203389119.jpg"
-    ),
-        Product(id = "2",
-            name = "Laptop",
-            price = 300.0,
-            imageUrl = "https://asani.co.id/wp-content/uploads/2023/08/ezgif.com-resize-8-1.jpg")
-    )
+   LaunchedEffect(categoryId) {
+       productViewModel.fetchProducts(categoryId)
+   }
+
+    val productsState = productViewModel.products.collectAsState()
+    val products = productsState.value
+
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Category ID : $categoryId" ,
             style = MaterialTheme.typography.titleLarge ,

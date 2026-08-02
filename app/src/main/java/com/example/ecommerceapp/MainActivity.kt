@@ -75,6 +75,8 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(Screens.Home.route)},
                         onNavigateToSignUp = {navController.navigate(Screens.SignUp.route)})
                 }
+                composable(Screens.CategoryList.route) {
+                    CategoryScreen(navController = navController)}
 
             }
 

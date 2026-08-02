@@ -13,21 +13,25 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.Screens.navigation.Screens
 import com.example.ecommerceapp.model.Category
+import com.example.ecommerceapp.viewmodels.CategoryViewModel
 
 @Composable
-fun CategoryScreen(navController : NavController){
-    val categories : List<Category> = listOf(
-        Category(
-            id = 1 , name = "Electronics" , iconUrl = "https://cdn-icons-png.flaticon.com/512/1555/1555401.png"),
-        Category(
-            id = 2 , name = "Clothing" , iconUrl = "https://cdn-icons-png.flaticon.com/512/2230/2230695.png")
-    )
+fun CategoryScreen(navController : NavController ,
+                   categoryViewModel: CategoryViewModel = hiltViewModel()){
+
+    val categoriesState = categoryViewModel.categories.collectAsState()
+    val categories = categoriesState.value
+
+
 
     Column {
         if (categories.isEmpty()) {
@@ -52,7 +56,9 @@ fun CategoryScreen(navController : NavController){
             ) {
                 items(categories) { category ->
                     CategoryItem(category = category ,
-                        onClick = {navController.navigate(Screens.ProductList.createRoute(category.id.toString()))})
+                        onClick = {
+                            navController
+                                .navigate(Screens.ProductList.createRoute(category.id.toString()))})
 
 
                 }
