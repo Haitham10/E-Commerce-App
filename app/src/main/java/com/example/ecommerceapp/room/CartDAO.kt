@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.ecommerceapp.model.Product
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartDAO {
@@ -18,7 +19,7 @@ interface CartDAO {
     suspend fun updateCartItem(cartItem : Product)
 
     @Query("SELECT * FROM cart_items")
-    suspend fun getAllCartItems() : List<Product>
+     fun getAllCartItems() : Flow <List<Product>>
 
     @Delete
     suspend fun deleteCartItem(cartItem : Product)
