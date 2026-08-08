@@ -29,11 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.example.ecommerceapp.model.Product
+import com.example.ecommerceapp.viewmodels.CartViewModel
 import com.example.ecommerceapp.viewmodels.ProductViewModel
 
 @Composable
 fun ProductDetailsScreen(productId: String ,
-                         productViewModel: ProductViewModel = hiltViewModel())
+                         productViewModel: ProductViewModel = hiltViewModel(),
+                         cartViewModel: CartViewModel = hiltViewModel())
 {
 
     LaunchedEffect(productId){ productViewModel.fetchProductDetails(productId) }
@@ -74,7 +76,9 @@ fun ProductDetailsScreen(productId: String ,
 
         }
 
-        IconButton(onClick = {} , modifier = Modifier.padding(16.dp)
+        IconButton(onClick = {
+            cartViewModel.addToCart(product)
+        } , modifier = Modifier.padding(16.dp)
             .background(MaterialTheme.colorScheme.primary ,
                 shape = CircleShape
             )) {

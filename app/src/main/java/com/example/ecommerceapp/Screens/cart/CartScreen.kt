@@ -14,19 +14,22 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.model.Product
+import com.example.ecommerceapp.viewmodels.CartViewModel
 
 @Composable
-fun CartScreen(navController : NavController){
-    val cartItems = listOf<Product>(Product(id = "1",
-        name = "smart phone",
-        price = 100.0,
-        imageUrl = "https://www.shutterstock.com/image-illustration/mobile-phone-mockups-sample-home-600nw-2203389119.jpg"))
+fun CartScreen(navController : NavController,
+               cartViewModel: CartViewModel= hiltViewModel()
+){
+    val cartItemsState = cartViewModel.cartItems.collectAsState(initial = emptyList())
+    val cartItems = cartItemsState.value
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp))
     {
@@ -44,7 +47,9 @@ fun CartScreen(navController : NavController){
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Button(onClick = {}) {
+                    Button(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Text("Continue Shopping")
                     }
                 }
@@ -53,7 +58,10 @@ fun CartScreen(navController : NavController){
                 LazyColumn(modifier = Modifier.weight(1f))
                 {
                     items(cartItems){
-                        item -> CartItemCard(item) {}
+                        item -> CartItemCard(item = item ,
+                            onRemoveItem = {
+                                cartViewModel.removeFromCart(item)
+                            })
                     }
                 }
                 Column(modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 16.dp)) {
@@ -62,13 +70,15 @@ fun CartScreen(navController : NavController){
                         Text("Total:",
                             style = MaterialTheme.typography.titleMedium)
 
-                        Text("$...",
+                        Text("$${cartViewModel.calcuteTotal(cartItems)}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold)
 
                     }
 
-                    Button(onClick = {} , modifier = Modifier.fillMaxWidth()
+                    Button(onClick = {
+
+                    } , modifier = Modifier.fillMaxWidth()
                         .height(50.dp)) {
                         Text("Checkout")
 

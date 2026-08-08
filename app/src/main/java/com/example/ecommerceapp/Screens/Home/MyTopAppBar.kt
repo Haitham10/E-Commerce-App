@@ -13,10 +13,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
+import com.example.ecommerceapp.Screens.navigation.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(){
+fun MyTopAppBar(navController: NavController){
     TopAppBar(title = {
         Text(text = "ShopEasy" ,
             style = MaterialTheme.typography.titleLarge.copy(
@@ -28,7 +30,9 @@ fun MyTopAppBar(){
             titleContentColor = Color.White
         ),
         actions ={
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                navController.navigate(route = Screens.Cart)
+            }) {
                 Icon(
                     imageVector = Icons.Default.ShoppingCart,
                     contentDescription = "Search",

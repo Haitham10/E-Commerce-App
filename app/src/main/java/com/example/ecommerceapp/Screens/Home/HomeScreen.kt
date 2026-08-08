@@ -31,7 +31,7 @@ fun HomeScreen(navController : NavController ,
                categoryViewModel: CategoryViewModel = hiltViewModel(),
 
 ){
-    Scaffold (topBar = { MyTopAppBar() },
+    Scaffold (topBar = { MyTopAppBar(navController) },
         bottomBar = { BottomNavigationBar() })
     {
         paddingValues ->

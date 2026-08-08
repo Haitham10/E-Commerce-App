@@ -16,12 +16,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ecommerceapp.model.Product
+import com.example.ecommerceapp.viewmodels.CartViewModel
 import com.example.ecommerceapp.viewmodels.ProductViewModel
 
 @Composable
 fun ProductScreen(categoryId : String ,
                   navController : NavController ,
-                  productViewModel: ProductViewModel = hiltViewModel()){
+                  productViewModel: ProductViewModel = hiltViewModel(),
+                  cartViewModel: CartViewModel = hiltViewModel()){
 
     LaunchedEffect(categoryId){
         productViewModel.fetchProducts(categoryId)
@@ -48,7 +50,9 @@ fun ProductScreen(categoryId : String ,
                 items(products){
                     product -> ProductItem(product = product,
                         onClick = {navController.navigate("product_details/${product.id}")},
-                        onAddToCart = {})
+                        onAddToCart = {
+                            cartViewModel.addToCart(product)
+                        })
                 }
             }
 
